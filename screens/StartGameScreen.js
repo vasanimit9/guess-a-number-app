@@ -1,38 +1,59 @@
-import React, { useState } from 'react';
-import { Button, Keyboard, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native';
+import React, { useState } from "react";
+import {
+  Alert,
+  Button,
+  Keyboard,
+  StyleSheet,
+  Text,
+  TouchableWithoutFeedback,
+  View,
+} from "react-native";
 
-import Card from '../components/Card';
-import Input from '../components/Input';
-import Colors from '../constants/colors';
+import Card from "../components/Card";
+import Input from "../components/Input";
+import Colors from "../constants/colors";
+import NumberContainer from "../components/NumberContainer";
 
-const StartGameScreen = props => {
-
-  const [enteredValue, setEnteredValue] = useState('');
+const StartGameScreen = (props) => {
+  const [enteredValue, setEnteredValue] = useState("");
   const [confirmed, setConfirmed] = useState(false);
   const [selectedNumber, setSelectedNumber] = useState();
 
-  const numberInputHandler = inputText => {
-    setEnteredValue(inputText.replace(/[^0-9]/g, ''));
+  const numberInputHandler = (inputText) => {
+    setEnteredValue(inputText.replace(/[^0-9]/g, ""));
   };
   const resetInputHandler = () => {
-    setEnteredValue('');
+    setEnteredValue("");
     setConfirmed(false);
   };
   const confirmInputHandler = () => {
     const chosenNumber = parseInt(enteredValue);
-    if( chosenNumber === NaN || chosenNumber <= 0 || chosenNumber > 99) {
+    if (isNaN(chosenNumber) || chosenNumber <= 0 || chosenNumber > 99) {
+      Alert.alert("Invalid Number!", "Numbers have to be from 1 to 99.", [
+        { text: "Okay", style: "destructive", onPress: resetInputHandler },
+      ]);
       return;
     }
     setSelectedNumber(chosenNumber);
-    setEnteredValue('');
+    setEnteredValue("");
     setConfirmed(true);
+    Keyboard.dismiss();
   };
 
   let confirmedOutput;
 
-  if(confirmed) {
+  if (confirmed) {
     confirmedOutput = (
-      <Text>Chosen Number: {selectedNumber}</Text>
+      <Card style={styles.summaryContainer}>
+        <Text>You selected</Text>
+        <NumberContainer>{selectedNumber}</NumberContainer>
+        <Button
+          title="Start Game"
+          onPress={() => {
+            props.onStartGame(selectedNumber);
+          }}
+        />
+      </Card>
     );
   }
 
@@ -40,7 +61,8 @@ const StartGameScreen = props => {
     <TouchableWithoutFeedback
       onPress={() => {
         Keyboard.dismiss();
-      }}>
+      }}
+    >
       <View style={styles.screen}>
         <Text style={styles.title}>Start a New Game!</Text>
         <Card style={styles.inputContainer}>
@@ -48,24 +70,27 @@ const StartGameScreen = props => {
           <Input
             style={styles.input}
             blurOnSubmit
-            autoCapitalize='none'
+            autoCapitalize="none"
             autoCorrect={false}
-            keyboardType='number-pad'
+            keyboardType="number-pad"
             maxLength={2}
             onChangeText={numberInputHandler}
-            value={enteredValue} />
+            value={enteredValue}
+          />
           <View style={styles.buttonContainer}>
             <View style={styles.button}>
               <Button
                 title="Reset"
                 onPress={resetInputHandler}
-                color={Colors.accent} />
+                color={Colors.accent}
+              />
             </View>
             <View style={styles.button}>
               <Button
                 title="Confirm"
                 onPress={confirmInputHandler}
-                color={Colors.primary} />
+                color={Colors.primary}
+              />
             </View>
           </View>
         </Card>
@@ -79,7 +104,7 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
     padding: 10,
-    alignItems: 'center',
+    alignItems: "center",
   },
   title: {
     fontSize: 20,
@@ -87,22 +112,26 @@ const styles = StyleSheet.create({
   },
   input: {
     width: 50,
-    textAlign: 'center',
+    textAlign: "center",
   },
   inputContainer: {
     width: 300,
-    maxWidth: '80%',
-    alignItems: 'center',
+    maxWidth: "80%",
+    alignItems: "center",
   },
   buttonContainer: {
-    flexDirection: 'row',
-    width: '100%',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    width: "100%",
+    justifyContent: "space-between",
     paddingHorizontal: 15,
   },
   button: {
-    width: '40%',
-  }
+    width: "40%",
+  },
+  summaryContainer: {
+    marginTop: 20,
+    alignItems: "center",
+  },
 });
 
 export default StartGameScreen;
