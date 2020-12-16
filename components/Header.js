@@ -9,7 +9,7 @@ const Header = props => {
       <Text style={styles.headerTitle}>{props.title}</Text>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   header: {
