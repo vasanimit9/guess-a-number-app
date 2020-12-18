@@ -48,6 +48,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    paddingVertical: 10,
   },
   imageContainer: {
     width: Dimensions.get("window").width * 0.7,
@@ -59,8 +60,8 @@ const styles = StyleSheet.create({
     marginVertical: Dimensions.get("window").height / 20,
   },
   image: {
-    width: 300,
-    height: 300,
+    width: "100%",
+    height: "100%",
   },
   resultContainer: {
     marginHorizontal: 30,
